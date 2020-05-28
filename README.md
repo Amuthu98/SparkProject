@@ -34,38 +34,6 @@ Pour gérer ces contraintes, il faudra réserver un emplacement de stockage spé
 
 **Schéma représentant l&#39;architecture de notre solution**
 
-![](RackMultipart20200528-4-qtm3mz_html_c76dbae3aa4f8770.gif) ![](RackMultipart20200528-4-qtm3mz_html_c76dbae3aa4f8770.gif)
-
-STREAM
-
-Script drone
-
-![](RackMultipart20200528-4-qtm3mz_html_57b49e39c7207848.gif) ![](RackMultipart20200528-4-qtm3mz_html_d07e778fab38f15.gif) ![](RackMultipart20200528-4-qtm3mz_html_13f3673276d66015.gif)
-
-Ping
-
-![](RackMultipart20200528-4-qtm3mz_html_4b490e4d60800834.png)
-
-/
-
-![](RackMultipart20200528-4-qtm3mz_html_d558afae2a80130b.png)
-
-![](RackMultipart20200528-4-qtm3mz_html_d1fa7421d1af1150.gif) ![](RackMultipart20200528-4-qtm3mz_html_36495bb73f1a7591.gif) ![](RackMultipart20200528-4-qtm3mz_html_13f3673276d66015.gif)
-
-Alerte
-
-![](RackMultipart20200528-4-qtm3mz_html_e7ea076aa3a2099d.png)
-
- ![](RackMultipart20200528-4-qtm3mz_html_2b2d540f1daf52f7.png)
-
-![](RackMultipart20200528-4-qtm3mz_html_c31a3207783b81d2.gif)
-
-![](RackMultipart20200528-4-qtm3mz_html_a18f8c3548f219bb.gif) ![](RackMultipart20200528-4-qtm3mz_html_30e10cdff81842ae.gif) ![](RackMultipart20200528-4-qtm3mz_html_87e0eced4d9ca73e.gif) ![](RackMultipart20200528-4-qtm3mz_html_c8153c043fb783ac.gif) ![](RackMultipart20200528-4-qtm3mz_html_a18f8c3548f219bb.gif) ![](RackMultipart20200528-4-qtm3mz_html_7ebea99d7488841f.gif)
-
-Sortie CSV pour ML / Reporting
-
-![](RackMultipart20200528-4-qtm3mz_html_c6babc246042665f.png)
-
-Chargement ligne par ligne
-
-![](RackMultipart20200528-4-qtm3mz_html_c6babc246042665f.png)
+<img src="architecture.png"
+     alt="Architecture image"
+     style="float: left; margin-right: 10px;" />
