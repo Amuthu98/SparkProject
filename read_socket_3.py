@@ -6,8 +6,8 @@ from datetime import datetime
 from botocore.exceptions import NoCredentialsError
 
 # AWS CREDENTIALS
-ACCESS_KEY = 'AKIA6FDQAJXFXEOCTDIW'
-SECRET_KEY = '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'
+ACCESS_KEY = ''
+SECRET_KEY = ''
 
 s3 = boto3.resource(
     's3',
