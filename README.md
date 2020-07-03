@@ -2,6 +2,10 @@
 
 # Projet de spark
 
+**Explication repo git**
+1) Pour simuler le fonctionnement d'un drone, il faut démarrer le script simul_drone.py ainsi que les 3 read sockets
+Les fichiers seront alors disponibles dans nos fichiers S3 (voir les credentials dans les read sockets)
+
 **Questions préliminaires**
 
 1) La première contrainte que l&#39;architecture de la solution devra prendre en compte est la mémoire générée par les drones. En effet, chaque drone devrait produire 100 Gb de données par jour.

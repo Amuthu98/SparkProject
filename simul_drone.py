@@ -6,6 +6,7 @@ import uuid
 from time import sleep
 import datetime
 import base64
+import os
 
 HOST = '127.0.0.1' #Standard loopback interface address(localhost)
 PORT = 9997 # Port to listen on(non - privileged ports are > 1023)
@@ -54,6 +55,7 @@ def update_drone_position(latitude_drone, longitude_drone, height_drone):
 
 	return latitude_drone, longitude_drone, height_drone
 
+
 # sockets to create basic logs and violation event
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s, \
 socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s2, \
@@ -75,7 +77,7 @@ socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s3 :
 			# classic message
 			conn.sendall(line.encode('UTF-8'))
 			print("\nLINE : ",line)
-			if random.random() < 0.07: # if violation detected, send specific message
+			if random.random() < 0.17: # if violation detected, send specific message
 				if random.random() <= 0.01: # violation code require human intervention ? ==> 1 %
 					violation_code = 0
 				else : 
@@ -90,12 +92,11 @@ socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s3 :
 					my_base64_image = base64.b64encode(img_file.read())
 				
 				image_line = f"{datetime.datetime.now().timestamp()};{image_id};{my_base64_image}\n"
-
 				# send on stream
 				conn2.sendall(violation_line.encode('UTF-8'))
 				print("\nVIOLATION LINE : ", violation_line)
 				conn3.sendall(image_line.encode('UTF-8'))
-				print("\nIMAGE LINE : ", image_line)
+				print("\nIMAGE LINE : ")#, image_line)
 
 			sleep(4)
 			latitude_drone, longitude_drone, height_drone =  update_drone_position(latitude_drone, longitude_drone, height_drone)
