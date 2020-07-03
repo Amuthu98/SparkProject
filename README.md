@@ -4,9 +4,9 @@
 
 **Explication repo git**
 1) Pour simuler le fonctionnement d'un drone, il faut démarrer le script simul_drone.py ainsi que les 3 read sockets
-Les fichiers seront alors disponibles dans nos fichiers S3 (voir les credentials dans les read sockets)
+Les fichiers seront alors disponibles dans nos fichiers S3
 
-N'oubliez pas de modifier les clés AWS en utilisant le fichier akey.txt
+Envoyez nous un mail à l'adresse predalienregel@gmail.com si vous souhaitez obtenir les credentials AWS
 
 **Questions préliminaires**
 
