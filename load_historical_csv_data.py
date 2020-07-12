@@ -10,8 +10,8 @@ from io import StringIO
 from botocore.exceptions import NoCredentialsError
 
 # AWS CREDENTIALS
-ACCESS_KEY = 'AKIASUAIN4F6CVZQZYSN'
-SECRET_KEY = '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'
+ACCESS_KEY = ''
+SECRET_KEY = ''
 
 # AWS S3 link
 s3 = boto3.resource(
