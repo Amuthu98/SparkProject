@@ -1,0 +1,263 @@
+package fr.esgi.training.spark.streaming
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.{col, dayofweek, month, date_format, hour, minute, round, split, when, _}
+import org.apache.spark.sql.streaming.Trigger
+import org.apache.spark.sql.types.{DataTypes, StructType}
+import org.apache.spark.streaming.Seconds
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+
+object StreamingReadS3Data {
+  def main(args: Array[String]): Unit = {
+
+    val spark: SparkSession = SparkSession.builder()
+      .master("local[1]")
+      .appName("SparkByExamples.com")
+      .getOrCreate()
+
+    import spark.sqlContext.implicits._
+    // test spark context method
+    //val conf = new SparkConf().setAppName("Simple Application").setMaster("local[*]")
+    //val sc = new SparkContext(conf)
+    //import spark.implicits._
+
+    // Replace Key with your AWS account key (You can find this on IAM
+    spark.sparkContext
+      .hadoopConfiguration.set("fs.s3a.access.key", "")
+    // Replace Key with your AWS secret key (You can find this on IAM
+    spark.sparkContext
+      .hadoopConfiguration.set("fs.s3a.secret.key", "")
+    spark.sparkContext
+      .hadoopConfiguration.set("fs.s3a.endpoint", "s3-eu-west-3.amazonaws.com")
+
+    // classic log files
+    val userSchema_log_files = new StructType().add("Latitude", "string")
+      .add("Longitude", "string")
+      .add("Height", "string")
+      .add("Timestamp", "string")
+      .add("Id Drone", "string")
+      .add("Status", "string")
+
+    val csv_log_DF = spark
+      .readStream
+      .option("sep", ";")
+      .schema(userSchema_log_files)      // Specify schema of the csv files
+      .csv("s3a://projetspark4iabd2ana2/raw_data/drone_log_*")    // Equivalent to format("csv").load("/path/to/directory")
+
+    // violation log
+    val userSchema_violation_files = new StructType().add("Latitude", "string")
+      .add("Longitude", "string")
+      .add("Height", "string")
+      .add("Timestamp", "string")
+      .add("Id Drone", "string")
+      .add("Status", "string")
+      .add("Violation Code", "string")
+      .add("Image Id", "string")
+
+    val csv_violation_DF = spark
+      .readStream
+      .option("sep", ";")
+      .schema(userSchema_violation_files)      // Specify schema of the csv files
+      .csv("s3a://projetspark4iabd2ana2/raw_data/drone_violation_*")    // Equivalent to format("csv").load("/path/to/directory")
+
+    // violation image log
+    val userSchema_violation_image_files = new StructType().add("Latitude", "string")
+      .add("Timestamp", "string")
+      .add("Image Id", "string")
+      .add("Base 64", "string")
+
+    val csv_violation_image_DF = spark
+      .readStream
+      .option("sep", ";")
+      .schema(userSchema_violation_image_files)      // Specify schema of the csv files
+      .csv("s3a://projetspark4iabd2ana2/raw_data/drone_image_*")    // Equivalent to format("csv").load("/path/to/directory")
+
+    // Historical violation data
+    val userSchema_historical = new StructType().add("Latitude", "string")
+      .add("Longitude", "string")
+      .add("Height", "string")
+      .add("Timestamp", "string")
+      .add("Id Drone", "string")
+      .add("Status", "string")
+      .add("Violation Code", "string")
+      .add("Image Id", "string")
+
+    var csv_historical_DF = spark
+      .readStream
+      .option("sep", ";")
+      // Specify schema of the csv files
+      .schema(userSchema_historical)
+      // Equivalent to format("csv").load("/path/to/directory")
+      .csv("s3a://projetspark4iabd2ana2/raw_historical_data_2")
+
+    // change content of timestamp column to print datetime
+    csv_historical_DF = csv_historical_DF
+      .withColumn("Timestamp", from_unixtime($"Timestamp"))
+      .withColumn("SparkLoadedAt", current_timestamp().as("SparkLoadedAt"))
+      //.withColumn("Timestamp", date_format($"Timestamp".cast(DataTypes.TimestampType), "yyyy-MM-dd hh:mm:ss"))
+      //.where(hour(col("Timestamp")) === 10)
+      /*
+      .withColumn("infractions_by_quarter",
+        when(month($"Timestamp") >= 1 && month($"Timestamp") < 4, "quarter_1")
+          .when(month($"Timestamp") >= 4 && month($"Timestamp") < 7, "quarter_2")
+          .when(month($"Timestamp") >= 7 && month($"Timestamp") < 10, "quarter_3")
+          .otherwise("quarter_4")
+      )
+      .withColumn("hour", hour(col("Timestamp")))
+      .withColumn("normal_day_or_weekend", dayofweek($"Timestamp"))
+      .withColumn("normal_day_or_weekend2",
+        when(dayofweek($"Timestamp") >= 2 && dayofweek($"Timestamp") < 7, "normal_day")
+          .otherwise("weekend")
+      )*/
+
+    /*.withColumn("minutes", minute(col("Timestamp")))*/
+
+    csv_historical_DF.printSchema()
+    // Answer questions
+    print("FIRST QUESTION, ARE VIOLATION MORE FREQUENT IN THE MORNING" +
+      " 6-12h59) OR IN THE AFTERNOON + EVENING (13-20h) ? (ONLY USE HISTORICAL" +
+      " DATASET FOR THIS TEST)")
+    var test = current_timestamp()
+    print(test)
+    //Q1
+    // filter histo dataset to have a timestamp column with good hours
+    //var csv_hi
+
+    //var csv_historical_DF_Q1 = csv_historical_DF.filter(hour(col("Timestamp")) == 10)
+
+    var csv_historical_DF_Q1 = csv_historical_DF
+      .withColumn("Morning_or_afternoon",
+        when(hour($"Timestamp") >= 6 && hour($"Timestamp") < 13, "morning_6-12h59")
+          .when(hour($"Timestamp") >= 13 && hour($"Timestamp") < 20, "afternoon_13-19h59")
+          .otherwise("another_time")
+      )
+      .select($"Morning_or_afternoon")//, $"SparkLoadedAt")
+      //.withWatermark("SparkLoadedAt", "60 minutes")
+      .groupBy($"Morning_or_afternoon")//, window($"SparkLoadedAt", "60 minutes", "30 minutes"))
+      //.groupBy($"Morning_or_afternoon")
+      .count()
+
+    //Q2 Plus de violation le weeked / journées normales ?
+    var csv_historical_DF_Q2 = csv_historical_DF
+      .withColumn("normal_day_or_weekend",
+        when(dayofweek($"Timestamp") >= 2 && dayofweek($"Timestamp") < 7, "normal_day")
+          .otherwise("weekend")
+      )
+      .select($"normal_day_or_weekend", $"SparkLoadedAt")
+      .withWatermark("SparkLoadedAt", "2 minutes")
+      .groupBy($"normal_day_or_weekend", $"SparkLoadedAt")//window($"SparkLoadedAt", "60 minutes", "30 minutes"))
+      //.groupBy($"normal_day_or_weekend")
+      //.agg(max(col('timestamp')).alias("timestamp")) \
+      //.orderBy('timestamp', ascending=False)
+      .count()
+
+    csv_historical_DF_Q2 = csv_historical_DF_Q2
+        .withColumn("count_avg",
+          when($"normal_day_or_weekend" === "normal_day", $"count" / 5)
+            .otherwise($"count" / 2)
+        )
+
+    //Q3 Nombre de violations par trimestres (janvier + fevrier + mars = 1 trimestre)
+    var csv_historical_DF_Q3 = csv_historical_DF
+      .withColumn("infractions_by_quarter",
+        when(month($"Timestamp") >= 1 && month($"Timestamp") < 4, "quarter_1")
+          .when(month($"Timestamp") >= 4 && month($"Timestamp") < 7, "quarter_2")
+          .when(month($"Timestamp") >= 7 && month($"Timestamp") < 10, "quarter_3")
+          .otherwise("quarter_4")
+      )
+      .select($"infractions_by_quarter")
+      .groupBy($"infractions_by_quarter")
+      .count()
+
+    //Q4 Quels sont les  5 codes de violation les plus récurrents ?
+    var csv_historical_DF_Q4 = csv_historical_DF
+      .select($"Violation Code")
+      .groupBy($"Violation Code")
+      .count()
+      .orderBy(col("count").desc)
+      .limit(5)
+
+    // choose the dataframe to read (between historical and drone logs)
+    val query_1 = csv_historical_DF_Q1.writeStream
+      .outputMode("complete")
+      .format("console")
+      //.option("numRows", 50)
+      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
+      .start()
+      //.awaitTermination()
+
+    val query_2 = csv_historical_DF_Q2.select($"normal_day_or_weekend", $"count")
+    .writeStream
+      .format("parquet")
+      /*.format("csv")
+      .option("header", true)
+      .option("sep", ",")
+      */
+      .outputMode("append")
+      //.option("path", "s3a://projetspark4iabd2ana/result_data")
+      //.option("checkpointLocation", "/s3-checkpointing")
+      .option("checkpointLocation", "/checkpoints4")
+      .option("path", "/results4")
+      //.trigger(Trigger.ProcessingTime("20 seconds"))
+      .start("my_parquet.parquet")
+      /*
+      .format("csv")
+      .option("sep", ",")
+      .option("header", true)
+      .outputMode("append")
+      .trigger(Trigger.ProcessingTime("30 seconds"))
+      .option("path", "s3a://projetspark4iabd2ana/result_data")
+      .option("checkpointLocation", "/s3-checkpointing")
+      .start("test.csv")
+      */
+      //.outputMode("append")
+      //.format("csv")
+      //.option("sep", ",")
+      //.trigger(Trigger.Once)//trigger(Trigger.ProcessingTime("60 seconds"))//trigger(Trigger.Once)
+      //.option("checkpointLocation", "/delete")
+      //.option("header", true)
+      //.outputMode("append")
+      //.trigger(Trigger.ProcessingTime("30 seconds"))
+      //.option("path", "s3a://projetspark4iabd2ana/result_data/")
+      //.option("checkpointLocation", "s3a://projetspark4iabd2ana/result_data/")
+      //.format("csv")
+      //.option("format", "complete")
+      //.trigger(ProcessingTime = "5 seconds")
+      //.option("checkpointLocation", "/delete")
+      //.option("path", "/abc")
+      //.option("numRows", 50)
+      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
+      //.start("results")
+      //.awaitTermination()
+
+    val query_3 = csv_historical_DF_Q3.writeStream
+      .outputMode("complete")
+      .format("console")
+      //.format("csv")
+      //.option("format", "complete")
+      //.trigger(ProcessingTime = "5 seconds")
+      //.option("checkpointLocation", "/delete")
+      //.option("path", "/abc")
+      //.option("numRows", 50)
+      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
+      .start()
+    //.awaitTermination()
+
+    val query_4 = csv_historical_DF_Q4.writeStream
+      .outputMode("complete")
+      .format("console")
+      //.format("csv")
+      //.option("format", "complete")
+      //.trigger(ProcessingTime = "5 seconds")
+      //.option("checkpointLocation", "/delete")
+      //.option("path", "/abc")
+      //.option("numRows", 50)
+      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
+      .start()
+      .awaitTermination()
+
+    print("CODE AFTER TERMINATION OF 4 QUERIES ?")
+  }
+
+}

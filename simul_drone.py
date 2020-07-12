@@ -5,8 +5,11 @@ import random
 import uuid
 from time import sleep
 import datetime
+import pytz
 import base64
 import os
+
+tz_paris = pytz.timezone('Europe/Paris') # Fix time zone, don't seems to work
 
 HOST = '127.0.0.1' #Standard loopback interface address(localhost)
 PORT = 9997 # Port to listen on(non - privileged ports are > 1023)
@@ -73,11 +76,13 @@ socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s3 :
 	conn3, addr = s3.accept()
 	with conn, conn2, conn3:
 		while True:
-			line = f"{latitude_drone};{longitude_drone};{height_drone};{datetime.datetime.now().timestamp()};{id_drone};{status_drone}\n" #send message
+			# tried to set timezone but don't seems to work so add 2 hours
+			my_timestamp = round((datetime.datetime.now(tz_paris) + datetime.timedelta(hours=2)).timestamp())
+			line = f"{latitude_drone};{longitude_drone};{height_drone};{my_timestamp};{id_drone};{status_drone}\n" #send message
 			# classic message
 			conn.sendall(line.encode('UTF-8'))
 			print("\nLINE : ",line)
-			if random.random() < 0.17: # if violation detected, send specific message
+			if random.random() <= 0.10: # if violation detected, send specific message (10%)
 				if random.random() <= 0.01: # violation code require human intervention ? ==> 1 %
 					violation_code = 0
 				else : 
@@ -85,13 +90,13 @@ socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s3 :
 
 				# prepare everything for the violation stream
 				image_id = str(uuid.uuid4())
-				violation_line = f"{latitude_drone};{longitude_drone};{height_drone};{datetime.datetime.now().timestamp()};{id_drone};{status_drone};{violation_code};{image_id}\n"
+				violation_line = f"{latitude_drone};{longitude_drone};{height_drone};{my_timestamp};{id_drone};{status_drone};{violation_code};{image_id}\n"
 				
 				# prepare everything for the image stream
 				with open("bad_parking_1.jpg", "rb") as img_file:
 					my_base64_image = base64.b64encode(img_file.read())
 				
-				image_line = f"{datetime.datetime.now().timestamp()};{image_id};{my_base64_image}\n"
+				image_line = f"{my_timestamp};{image_id};{my_base64_image}\n"
 				# send on stream
 				conn2.sendall(violation_line.encode('UTF-8'))
 				print("\nVIOLATION LINE : ", violation_line)

@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b3b58075-0b25-453c-95ad-1023d9ad70af" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../akey.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bad_parking_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../bad_parking_1.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../read_socket_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../read_socket_1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../read_socket_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../read_socket_2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../read_socket_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../read_socket_3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../sageMaker_example.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../simul_drone.py" beforeDir="false" afterPath="$PROJECT_DIR$/../simul_drone.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -71,26 +74,11 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.StreamingReadS3DroneData">
+  <component name="RunManager" selected="Application.StreamingReadS3HistoData">
     <configuration name="MachineLearning_P1" type="Application" factoryName="Application" temporary="true">
       <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="fr.esgi.training.spark.ml.MachineLearning_P1" />
-      <module name="training-spark" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.esgi.training.spark.ml.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MachineLearning_P2" type="Application" factoryName="Application" temporary="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="fr.esgi.training.spark.ml.MachineLearning_P2" />
       <module name="training-spark" />
       <extension name="coverage">
         <pattern>
@@ -156,6 +144,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="StreamingReadS3HistoData" type="Application" factoryName="Application" temporary="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="fr.esgi.training.spark.streaming.StreamingReadS3Data" />
+      <module name="training-spark" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.esgi.training.spark.streaming.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -167,11 +170,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.StreamingReadS3HistoData" />
         <item itemvalue="Application.StreamingReadS3DroneData" />
         <item itemvalue="Application.StreamingPushDroneToS3_stream1" />
         <item itemvalue="Application.StreamingPushDroneToS3" />
         <item itemvalue="Application.MachineLearning_P1" />
-        <item itemvalue="Application.MachineLearning_P2" />
       </list>
     </recent_temporary>
   </component>
@@ -200,7 +203,12 @@
       <workItem from="1593414952630" duration="608000" />
       <workItem from="1593416863433" duration="8642000" />
       <workItem from="1593673879573" duration="8224000" />
-      <workItem from="1593809424892" duration="4798000" />
+      <workItem from="1593809424892" duration="13041000" />
+      <workItem from="1594199451711" duration="59329000" />
+      <workItem from="1594316008253" duration="14700000" />
+      <workItem from="1594370068252" duration="6982000" />
+      <workItem from="1594380598060" duration="2065000" />
+      <workItem from="1594541273475" duration="294000" />
     </task>
     <servers />
   </component>

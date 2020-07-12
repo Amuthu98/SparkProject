@@ -6,7 +6,7 @@
 1) Pour simuler le fonctionnement d'un drone, il faut démarrer le script simul_drone.py ainsi que les 3 read sockets
 Les fichiers seront alors disponibles dans nos fichiers S3
 
-Envoyez nous un mail à l'adresse predalienregel@gmail.com si vous souhaitez obtenir les credentials AWS
+Remplissez les credentials AWS par les votres et téléchargez le fichier des violations récoltées par la NYC (année 2015), renommez le en historical_2015.csv
 
 **Questions préliminaires**
 
