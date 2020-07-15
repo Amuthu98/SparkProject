@@ -1,0 +1,4 @@
+v1
+{"path":"file:///D:/cours/quatrième%20année/spark/projet_s2/SparkProject/spark-streaming-esgi/my_parquet.parquet/part-00000-b0de7d40-83c6-41de-a655-a98ff577ba94-c000.snappy.parquet","size":383,"isDir":false,"modificationTime":1594833757802,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///D:/cours/quatrième%20année/spark/projet_s2/SparkProject/spark-streaming-esgi/my_parquet.parquet/part-00123-cf9b4613-1f9d-4491-a241-c3f98c1eb1d4-c000.snappy.parquet","size":741,"isDir":false,"modificationTime":1594833783149,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///D:/cours/quatrième%20année/spark/projet_s2/SparkProject/spark-streaming-esgi/my_parquet.parquet/part-00184-3261c627-53f3-4526-a13c-88490c2ec86c-c000.snappy.parquet","size":714,"isDir":false,"modificationTime":1594833794937,"blockReplication":1,"blockSize":33554432,"action":"add"}

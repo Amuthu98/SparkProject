@@ -131,7 +131,7 @@ while batch_count < 1000:
     time = datetime.now().strftime("%Y%m%d%H%M%S")
     
     try:
-        s3.Object("projetspark4iabd2ana2", "raw_historical_data_2/part_"+str(batch_count)+"_"+time+".txt").put(Body=csv_buffer.getvalue())
+        s3.Object("projetspark4iabd2ana", "raw_historical_data/part_"+str(batch_count)+"_"+time+".txt").put(Body=csv_buffer.getvalue())
     except FileNotFoundError:
         print("The file was not found")
     except NoCredentialsError:

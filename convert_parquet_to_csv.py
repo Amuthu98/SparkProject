@@ -3,20 +3,20 @@ import os
 
 
 # convert all .parquet file to csv
-for file in os.listdir("spark-streaming-esgi/my_parquet3.parquet3/"):
+for file in os.listdir("spark-streaming-esgi/my_parquet.parquet/"):
     if file.endswith(".parquet"):
-        file_path = os.path.join("spark-streaming-esgi/my_parquet3.parquet3/", file)
-        print(os.path.join("spark-streaming-esgi/my_parquet3.parquet3/", file))
+        file_path = os.path.join("spark-streaming-esgi/my_parquet.parquet/", file)
+        print(os.path.join("spark-streaming-esgi/my_parquet.parquet/", file))
         print("converting ...")
-        df = pd.read_parquet(os.path.join("spark-streaming-esgi/my_parquet3.parquet3/", file))
+        df = pd.read_parquet(os.path.join("spark-streaming-esgi/my_parquet.parquet/", file))
         new_path = file_path.replace("snappy.parquet", "snappy.csv")
         df.to_csv(new_path)
 
 # when all csv created, get them all in a list
 all_csv = []
-for file in os.listdir("spark-streaming-esgi/my_parquet3.parquet3/"):
+for file in os.listdir("spark-streaming-esgi/my_parquet.parquet/"):
     if file.endswith(".csv"):
-       all_csv.append(os.path.join("spark-streaming-esgi/my_parquet3.parquet3/", file)) 
+       all_csv.append(os.path.join("spark-streaming-esgi/my_parquet.parquet/", file)) 
 
 # merge all csvs into one dataframe, do transformations to delete useless data then create final csv
 combined_csv = pd.concat([pd.read_csv(f) for f in all_csv ])
@@ -38,10 +38,10 @@ for file in all_csv:
 #print(df.loc[df['Value'].idxmax()])
 
 
-combined_csv.to_csv("spark-streaming-esgi/my_parquet3.parquet3/combined.csv")
+combined_csv.to_csv("spark-streaming-esgi/my_parquet.parquet/combined.csv")
 
 
 
 
-# df = pd.read_parquet('spark-streaming-esgi/my_parquet3.parquet3/part-00198-b4612866-1878-4e97-911b-fc3bd7593609-c000.snappy.parquet')
-# df.to_csv('spark-streaming-esgi/my_parquet3.parquet3/last_converted_parquet.csv')
+# df = pd.read_parquet('spark-streaming-esgi/my_parquet.parquet/part-00198-b4612866-1878-4e97-911b-fc3bd7593609-c000.snappy.parquet')
+# df.to_csv('spark-streaming-esgi/my_parquet.parquet/last_converted_parquet.csv')

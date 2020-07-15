@@ -31,7 +31,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     	try:
     		#if data
     		time = datetime.now().strftime("%Y%m%d%H%M%S")
-    		s3.Object("projetspark4iabd2ana2", "raw_data/drone_image_violation_"+time+".txt").put(Body=data)
+    		s3.Object("projetspark4iabd2ana", "raw_data/drone_image_violation_"+time+".txt").put(Body=data)
     		#uploaded = upload_to_aws('local_file', 'bucket_name', 's3_file_name')
     	except FileNotFoundError:
         	print("The file was not found")

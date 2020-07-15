@@ -39,7 +39,7 @@ object StreamingReadS3Data {
       .readStream
       .option("sep", ";")
       .schema(userSchema_log_files)      // Specify schema of the csv files
-      .csv("s3a://projetspark4iabd2ana2/raw_data/drone_log_*")    // Equivalent to format("csv").load("/path/to/directory")
+      .csv("s3a://projetspark4iabd2ana/raw_data/drone_log_*")    // Equivalent to format("csv").load("/path/to/directory")
 
     // violation log
     val userSchema_violation_files = new StructType().add("Latitude", "string")
@@ -55,10 +55,10 @@ object StreamingReadS3Data {
       .readStream
       .option("sep", ";")
       .schema(userSchema_violation_files)      // Specify schema of the csv files
-      .csv("s3a://projetspark4iabd2ana2/raw_data/drone_violation_*")    // Equivalent to format("csv").load("/path/to/directory")
+      .csv("s3a://projetspark4iabd2ana/raw_data/drone_violation_*")    // Equivalent to format("csv").load("/path/to/directory")
 
     // violation image log
-    val userSchema_violation_image_files = new StructType().add("Latitude", "string")
+    val userSchema_violation_image_files = new StructType()
       .add("Timestamp", "string")
       .add("Image Id", "string")
       .add("Base 64", "string")
@@ -67,7 +67,7 @@ object StreamingReadS3Data {
       .readStream
       .option("sep", ";")
       .schema(userSchema_violation_image_files)      // Specify schema of the csv files
-      .csv("s3a://projetspark4iabd2ana2/raw_data/drone_image_*")    // Equivalent to format("csv").load("/path/to/directory")
+      .csv("s3a://projetspark4iabd2ana/raw_data/drone_image_*")    // Equivalent to format("csv").load("/path/to/directory")
 
     // Historical violation data
     val userSchema_historical = new StructType().add("Latitude", "string")
@@ -85,7 +85,7 @@ object StreamingReadS3Data {
       // Specify schema of the csv files
       .schema(userSchema_historical)
       // Equivalent to format("csv").load("/path/to/directory")
-      .csv("s3a://projetspark4iabd2ana2/raw_historical_data_2")
+      .csv("s3a://projetspark4iabd2ana/raw_historical_data")
 
     // change content of timestamp column to print datetime
     csv_historical_DF = csv_historical_DF
