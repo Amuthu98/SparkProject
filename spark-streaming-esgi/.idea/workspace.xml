@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b3b58075-0b25-453c-95ad-1023d9ad70af" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bad_parking_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../bad_parking_1.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../read_socket_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../read_socket_1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../read_socket_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../read_socket_2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../read_socket_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../read_socket_3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../sageMaker_example.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../simul_drone.py" beforeDir="false" afterPath="$PROJECT_DIR$/../simul_drone.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -209,6 +203,7 @@
       <workItem from="1594370068252" duration="6982000" />
       <workItem from="1594380598060" duration="2065000" />
       <workItem from="1594541273475" duration="294000" />
+      <workItem from="1594819095883" duration="4005000" />
     </task>
     <servers />
   </component>

@@ -17,10 +17,6 @@ object StreamingReadS3Data {
       .getOrCreate()
 
     import spark.sqlContext.implicits._
-    // test spark context method
-    //val conf = new SparkConf().setAppName("Simple Application").setMaster("local[*]")
-    //val sc = new SparkContext(conf)
-    //import spark.implicits._
 
     // Replace Key with your AWS account key (You can find this on IAM
     spark.sparkContext
@@ -96,35 +92,14 @@ object StreamingReadS3Data {
       .withColumn("Timestamp", from_unixtime($"Timestamp"))
       .withColumn("SparkLoadedAt", current_timestamp().as("SparkLoadedAt"))
       //.withColumn("Timestamp", date_format($"Timestamp".cast(DataTypes.TimestampType), "yyyy-MM-dd hh:mm:ss"))
-      //.where(hour(col("Timestamp")) === 10)
-      /*
-      .withColumn("infractions_by_quarter",
-        when(month($"Timestamp") >= 1 && month($"Timestamp") < 4, "quarter_1")
-          .when(month($"Timestamp") >= 4 && month($"Timestamp") < 7, "quarter_2")
-          .when(month($"Timestamp") >= 7 && month($"Timestamp") < 10, "quarter_3")
-          .otherwise("quarter_4")
-      )
-      .withColumn("hour", hour(col("Timestamp")))
-      .withColumn("normal_day_or_weekend", dayofweek($"Timestamp"))
-      .withColumn("normal_day_or_weekend2",
-        when(dayofweek($"Timestamp") >= 2 && dayofweek($"Timestamp") < 7, "normal_day")
-          .otherwise("weekend")
-      )*/
-
-    /*.withColumn("minutes", minute(col("Timestamp")))*/
 
     csv_historical_DF.printSchema()
+
     // Answer questions
-    print("FIRST QUESTION, ARE VIOLATION MORE FREQUENT IN THE MORNING" +
-      " 6-12h59) OR IN THE AFTERNOON + EVENING (13-20h) ? (ONLY USE HISTORICAL" +
-      " DATASET FOR THIS TEST)")
     var test = current_timestamp()
     print(test)
-    //Q1
-    // filter histo dataset to have a timestamp column with good hours
-    //var csv_hi
-
-    //var csv_historical_DF_Q1 = csv_historical_DF.filter(hour(col("Timestamp")) == 10)
+    //Q1 Plus de violations le matin ou l'après midi ?
+    print("Q1 Plus de violations le matin ou l'après midi ?")
 
     var csv_historical_DF_Q1 = csv_historical_DF
       .withColumn("Morning_or_afternoon",
@@ -139,6 +114,8 @@ object StreamingReadS3Data {
       .count()
 
     //Q2 Plus de violation le weeked / journées normales ?
+    print("Q2 Plus de violations le weekend ou en semaine ?")
+
     var csv_historical_DF_Q2 = csv_historical_DF
       .withColumn("normal_day_or_weekend",
         when(dayofweek($"Timestamp") >= 2 && dayofweek($"Timestamp") < 7, "normal_day")
@@ -147,9 +124,6 @@ object StreamingReadS3Data {
       .select($"normal_day_or_weekend", $"SparkLoadedAt")
       .withWatermark("SparkLoadedAt", "2 minutes")
       .groupBy($"normal_day_or_weekend", $"SparkLoadedAt")//window($"SparkLoadedAt", "60 minutes", "30 minutes"))
-      //.groupBy($"normal_day_or_weekend")
-      //.agg(max(col('timestamp')).alias("timestamp")) \
-      //.orderBy('timestamp', ascending=False)
       .count()
 
     csv_historical_DF_Q2 = csv_historical_DF_Q2
@@ -159,6 +133,8 @@ object StreamingReadS3Data {
         )
 
     //Q3 Nombre de violations par trimestres (janvier + fevrier + mars = 1 trimestre)
+    print("Q3 Plus de violations selon les trimestres ? (janvier + fevrier + mars = 1 trimestre)")
+
     var csv_historical_DF_Q3 = csv_historical_DF
       .withColumn("infractions_by_quarter",
         when(month($"Timestamp") >= 1 && month($"Timestamp") < 4, "quarter_1")
@@ -171,6 +147,8 @@ object StreamingReadS3Data {
       .count()
 
     //Q4 Quels sont les  5 codes de violation les plus récurrents ?
+    print("Q4 Quels sont les codes de violation les plus récurrents ?")
+
     var csv_historical_DF_Q4 = csv_historical_DF
       .select($"Violation Code")
       .groupBy($"Violation Code")
@@ -178,7 +156,23 @@ object StreamingReadS3Data {
       .orderBy(col("count").desc)
       .limit(5)
 
-    // choose the dataframe to read (between historical and drone logs)
+    // choose the dataframe to read (between historical and drone logs), here we read them all
+    val query_drone_log = csv_log_DF.writeStream
+      .outputMode("append")
+      .format("console")
+      .start()
+    val query_violation_log = csv_violation_DF.writeStream
+      .outputMode("append")
+      .format("console")
+      .start()
+
+    val query_image_violation_log = csv_violation_image_DF.writeStream
+      .outputMode("append")
+      .format("console")
+      //.option("numRows", 50)
+      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
+      .start()
+
     val query_1 = csv_historical_DF_Q1.writeStream
       .outputMode("complete")
       .format("console")
@@ -197,67 +191,23 @@ object StreamingReadS3Data {
       .outputMode("append")
       //.option("path", "s3a://projetspark4iabd2ana/result_data")
       //.option("checkpointLocation", "/s3-checkpointing")
-      .option("checkpointLocation", "/checkpoints4")
-      .option("path", "/results4")
+      .option("checkpointLocation", "/checkpoints6")
+      .option("path", "/results6")
       //.trigger(Trigger.ProcessingTime("20 seconds"))
       .start("my_parquet.parquet")
-      /*
-      .format("csv")
-      .option("sep", ",")
-      .option("header", true)
-      .outputMode("append")
-      .trigger(Trigger.ProcessingTime("30 seconds"))
-      .option("path", "s3a://projetspark4iabd2ana/result_data")
-      .option("checkpointLocation", "/s3-checkpointing")
-      .start("test.csv")
-      */
-      //.outputMode("append")
-      //.format("csv")
-      //.option("sep", ",")
-      //.trigger(Trigger.Once)//trigger(Trigger.ProcessingTime("60 seconds"))//trigger(Trigger.Once)
-      //.option("checkpointLocation", "/delete")
-      //.option("header", true)
-      //.outputMode("append")
-      //.trigger(Trigger.ProcessingTime("30 seconds"))
-      //.option("path", "s3a://projetspark4iabd2ana/result_data/")
-      //.option("checkpointLocation", "s3a://projetspark4iabd2ana/result_data/")
-      //.format("csv")
-      //.option("format", "complete")
-      //.trigger(ProcessingTime = "5 seconds")
-      //.option("checkpointLocation", "/delete")
-      //.option("path", "/abc")
-      //.option("numRows", 50)
-      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
-      //.start("results")
-      //.awaitTermination()
 
     val query_3 = csv_historical_DF_Q3.writeStream
       .outputMode("complete")
       .format("console")
-      //.format("csv")
-      //.option("format", "complete")
-      //.trigger(ProcessingTime = "5 seconds")
-      //.option("checkpointLocation", "/delete")
-      //.option("path", "/abc")
-      //.option("numRows", 50)
-      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
       .start()
     //.awaitTermination()
 
     val query_4 = csv_historical_DF_Q4.writeStream
       .outputMode("complete")
       .format("console")
-      //.format("csv")
-      //.option("format", "complete")
-      //.trigger(ProcessingTime = "5 seconds")
-      //.option("checkpointLocation", "/delete")
-      //.option("path", "/abc")
-      //.option("numRows", 50)
-      //.trigger(Trigger.ProcessingTime("10 seconds")) //==> used before windows
       .start()
       .awaitTermination()
 
-    print("CODE AFTER TERMINATION OF 4 QUERIES ?")
   }
 
 }

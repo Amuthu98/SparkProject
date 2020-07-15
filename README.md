@@ -8,6 +8,11 @@ Les fichiers seront alors disponibles dans nos fichiers S3
 
 Remplissez les credentials AWS par les votres et téléchargez le fichier des violations récoltées par la NYC (année 2015), renommez le en historical_2015.csv
 
+Pour charger le CSV par groupe de 50 000 lignes, démarrez le script load_historical_csv_data.py
+
+Pour lire les données en streaming avec Spark, ouvrez le fichier spark-streaming-esgi\src\main\scala\fr\esgi\training\spark\streaming\StreamingReadS3Data.scala, entrez vos credentials AWS et excutez le code jute après avoir lancé les scripts
+
+
 **Questions préliminaires**
 
 1) La première contrainte que l&#39;architecture de la solution devra prendre en compte est la mémoire générée par les drones. En effet, chaque drone devrait produire 100 Gb de données par jour.
